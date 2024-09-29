@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             icon={faCartShopping} 
             className={`${isAnimating ? 'animate-scale' : ''} text-[#AAE6D9] text-[28px] md:text-[32px] xl:text-[40px]`}
           />
-          <span className={`${isAnimating ? 'animate-color' : ''} absolute flex justify-center ml-[4px] right-0 left-0 text-[11px] top-[1px] md:text-[13px] md:top-[2px] xl:text-[15px] xl:top-[2px] xl:left-[2px] font-extrabold text-[#101010]`}>
+          <span className={`${isAnimating ? 'animate-color' : ''} absolute flex justify-center ml-[4px] right-0 left-0 text-[11px] top-[1px] md:text-[13px] md:top-[2px] xl:text-[15px] xl:top-[2px] xl:left-[2px] font-extrabold text-black`}>
             {itemCount < 100 ? itemCount : '99+'}
           </span>
         </div>

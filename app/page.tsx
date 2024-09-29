@@ -1,8 +1,8 @@
 'use client'
 
 import Spline from '@splinetool/react-spline';
-import { Application, SPEObject } from '@splinetool/runtime';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { Application, SPEObject, SplineEvent } from '@splinetool/runtime';
+import { useEffect, useRef, useState, useCallback, Suspense } from 'react';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useQuantity } from './contexts/CartQuantityContext';
@@ -74,21 +74,19 @@ export default function Home() {
     }
   }, [splineInstance]);
 
-  useEffect(() => {
-    if (!splineInstance) return;
 
-    const fetchColor = async () => {
-      const cart = document.getElementById('section-5');
-      if (splineInstance.getVariable('clicked') === true && cart?.style.bottom !== '-200px') {
-        const colorValue = splineInstance.getVariable('color');
-        setColor(colorValue);
-      }
-    };
-
-    const interval = setInterval(fetchColor, 100);
-    return () => clearInterval(interval);
-  }, [splineInstance]);
-
+  const fetchColor = async (e: SplineEvent) => {
+    const cart = document.getElementById('section-5');
+    if (cart?.style.bottom !== '-200px') {
+      if (e.target.name === 'Bottle 5') setColor(0);
+      else if (e.target.name === 'Bottle 3') setColor(1);
+      else if (e.target.name === 'Bottle') setColor(2);
+      else if (e.target.name === 'Bottle 2') setColor(3);
+      else if (e.target.name === 'Bottle 4') setColor(4);
+      else if (e.target.name === 'Rectangle') setColor(5);
+    }
+  };
+  
   const onLoad = useCallback((spline: Application) => {
     setSplineInstance(spline);
     scene.current = spline;
@@ -103,7 +101,7 @@ export default function Home() {
       { ref: royal, name: 'Text 13' },
       { ref: ruby, name: 'ruby' },
       { ref: forest, name: 'Text 14' },
-      { ref: sunset, name: 'ruby 2' },
+      { ref: sunset, name: 'ruby 4' },
     ];
 
     objects.forEach(({ ref, name }) => {
@@ -114,7 +112,7 @@ export default function Home() {
         console.warn(`Object named "${name}" not found`);
       }
     });
-
+console.log(sunset.current)
     // Main scrolling animation
     gsap.timeline({
       scrollTrigger: {
@@ -316,8 +314,8 @@ export default function Home() {
         scene="https://prod.spline.design/K6xe25tQ2Z16nOm3/scene.splinecode"
         onLoad={onLoad}
         className='fixed top-0 bottom-0 left-0 right-0'
+        onSplineMouseDown={fetchColor}
       />
-
       <Section id={'section-1'} marginTop={marginTop} className={`relative z-1 flex items-center w-full max-w-[750px] mid2:max-w-[500px] lg:max-w-[525px] xl:max-w-[580px] 2xl:max-w-[clamp(500px,37vw,800px)] h-[947px] mx-auto mid2:ml-auto mid2:mr-[30px] lg:mr-[3vw] xl:mr-[5vw] 2xl:mr-[clamp(100px,10vw,200px)] p-4 2xl:p-0`} header={'Sleek & Modern'} text={'A minimalist, stylish design that fits seamlessly with your active lifestyle. Available in multiple colors, it holds 750ml and is perfect for daily hydration.'}/>
       <Section id={'section-2'} marginTop={1300} className='relative z-1 flex items-center my-[1300px] w-full max-w-[750px] mid2:max-w-[500px] lg:max-w-[525px] xl:max-w-[580px] 2xl:max-w-[clamp(500px,37vw,800px)] h-[947px] mx-auto mid2:mr-auto mid2:ml-[30px] lg:ml-[3vw] xl:ml-[5vw] 2xl:ml-[clamp(100px,10vw,200px)] p-4 2xl:p-0' header={'Stable Temperature'} text={'Double-walled thermal insulation keeps drinks cold for up to 24 hours or hot for 12 hours, making it ideal for any adventure.'}/>
       <Section id={'section-3'} marginTop={0} className='relative z-1 flex items-center mb-[2300px] w-full max-w-[750px] mid2:max-w-[500px] lg:max-w-[525px] xl:max-w-[580px] 2xl:max-w-[clamp(500px,37vw,800px)] h-[947px] mx-auto mid2:ml-auto mid2:mr-[30px] lg:mr-[3vw] xl:mr-[5vw] 2xl:mr-[clamp(100px,10vw,200px)] p-4 2xl:p-0' header={'Built for Simplicity'} text={'Lightweight, durable, and leak-proof, this BPA-free bottle is easy to carry, refill, and clean, offering both function and style in one sleek package.'}/>
